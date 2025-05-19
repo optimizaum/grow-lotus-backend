@@ -3,7 +3,8 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 import fs from 'fs';
-export const uploadGallery = (req, res) => {
+import deleteUploadedFile from "../utils/deleteUploadedFileUtils.js";
+export const createGallery = (req, res) => {
   const { eventType } = req.body;
   // Check if eventType and actions are provided
   if(!eventType ){
@@ -21,12 +22,12 @@ export const uploadGallery = (req, res) => {
   });
 
   res.status(200).json({
-    message: "File uploaded successfully",
+    message: "Gallery created successfully",
     path: newGallery,
   });
 };
- // Function to get file 
-export const getGallery = async (req, res) => {
+ // Function to get All Gallery file 
+export const getAllGallery = async (req, res) => {
   try {
     const galleries = await galleryModel.find();
     res.status(200).json(galleries);
@@ -34,7 +35,7 @@ export const getGallery = async (req, res) => {
     res.status(500).json({ message: "Error fetching galleries", error });
   }
 }
-
+// Function to get Gallery file by id
 export const getGalleryById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -50,21 +51,20 @@ export const getGalleryById = async (req, res) => {
 
 // DELETE controller
 export const deleteGallery = async (req, res) => {
-  const { id } = req.params;
-
   try {
-    // 1. Find the gallery by ID
+    const { id } = req.params;
+
     const gallery = await galleryModel.findById(id);
     if (!gallery) {
       return res.status(404).json({ message: "Gallery not found" });
     }
 
-    // 2. Delete the file from upload folder
+    // Delete the file from upload folder
     if (gallery.imageFileName) {
       deleteUploadedFile(gallery.imageFileName);
     }
 
-    // 3. Delete the gallery record from DB
+    // Delete the gallery record from DB
     await galleryModel.findByIdAndDelete(id);
 
     return res.status(200).json({ message: "Gallery deleted successfully" });
@@ -74,15 +74,15 @@ export const deleteGallery = async (req, res) => {
   }
 };
 
-// Utility function
-const deleteUploadedFile = (filename) => {
-  const filePath = join(process.cwd(), 'src/upload', filename);
+// // Utility function
+// const deleteUploadedFile = (filename) => {
+//   const filePath = join(process.cwd(), 'src/upload', filename);
 
-  fs.unlink(filePath, (err) => {
-    if (err) {
-      console.error(`Failed to delete file '${filename}':`, err.message);
-    } else {
-      console.log(`File '${filename}' deleted from upload folder.`);
-    }
-  });
-};
+//   fs.unlink(filePath, (err) => {
+//     if (err) {
+//       console.error(`Failed to delete file '${filename}':`, err.message);
+//     } else {
+//       console.log(`File '${filename}' deleted from upload folder.`);
+//     }
+//   });
+// };

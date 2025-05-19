@@ -5,10 +5,10 @@ const serviceSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    serviceDescription: {
+    description: {
         type: String,
     },
-    serviceImageFileName: {
+    imageFileName: {
         type: String,
     },
     bulletPoints:{

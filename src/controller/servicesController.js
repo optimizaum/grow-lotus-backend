@@ -2,6 +2,7 @@ import serviceModel from "../model/servicesModel.js";
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
+import deleteUploadedFile from "../utils/deleteUploadedFileUtils.js";
 const __filename = fileURLToPath(import.meta.url);
 
 // Function to create a new service
@@ -127,15 +128,4 @@ export const deleteServices = async (req, res) => {
   }
 };
 
-// Function for deleting the uploaded file from upload folder
-const deleteUploadedFile = (filename) => {
-  const filePath = join(process.cwd(), 'src/upload', filename);
 
-  fs.unlink(filePath, (err) => {
-    if (err) {
-      console.error(`Failed to delete file '${filename}':`, err.message);
-    } else {
-      console.log(`File '${filename}' deleted from upload folder.`);
-    }
-  });
-};

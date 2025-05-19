@@ -3,8 +3,9 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
 import fs from 'fs';
-import { deleteGallery, getGallery, getGalleryById, uploadGallery } from '../controller/galleryController.js';
+import { deleteGallery, getAllGallery, getGalleryById, createGallery } from '../controller/galleryController.js';
 import { createServices, deleteServices, editServices, getServices, getServicesById } from '../controller/servicesController.js';
+import { createBlogs, deleteBlogs, editBlogs, getAllBlogs, getBlogsById } from '../controller/blogsController.js';
 
 const mediaContentRoute = express.Router();
 
@@ -43,9 +44,16 @@ mediaContentRoute.get("/services/:id", getServicesById);
 mediaContentRoute.patch("/services/:id", editServices);
 mediaContentRoute.delete("/services/:id", deleteServices);
 
+// Route for Blogs
+mediaContentRoute.post("/blogs", upload.single('file'), createBlogs);
+mediaContentRoute.get("/blogs", getAllBlogs);
+mediaContentRoute.get("/blogs/:id", getBlogsById);
+mediaContentRoute.patch("/blogs/:id", editBlogs);
+mediaContentRoute.delete("/blogs/:id", deleteBlogs);
+
 // Routes for gallery
-mediaContentRoute.post("/gallery", upload.single('file'), uploadGallery);
-mediaContentRoute.get("/gallery", getGallery);
+mediaContentRoute.post("/gallery", upload.single('file'), createGallery);
+mediaContentRoute.get("/gallery", getAllGallery);
 mediaContentRoute.get("/gallery/:id", getGalleryById);
 mediaContentRoute.delete("/gallery/:id", deleteGallery);
 
