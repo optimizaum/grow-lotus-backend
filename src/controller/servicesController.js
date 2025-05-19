@@ -7,12 +7,12 @@ const __filename = fileURLToPath(import.meta.url);
 
 // Function to create a new service
 export const createServices = (req, res) => {
-  const { serviceName , serviceDescription , bulletPoints } = req.body;
-  // Check if serviceName || serviceDescription and file are provided
+  const { serviceName , description , bulletPoints } = req.body;
+  // Check if serviceName || description and file are provided
   if(!serviceName){
     return res.status(400).json({ message: "Service Name required" });
   }
-  if(!serviceDescription ){
+  if(!description ){
     return res.status(400).json({ message: "Service Description required" });
   }
 
@@ -25,7 +25,7 @@ export const createServices = (req, res) => {
   const newServices =  serviceModel.create({
     imageFileName: filename,
     serviceName,
-    serviceDescription,
+    description,
     bulletPoints
   });
 
@@ -71,7 +71,7 @@ export const getServicesById = async (req, res) => {
 // Function to edit file by ID
 export const editServices = async (req, res) => {
   const { id } = req.params;
-  const { serviceName , serviceDescription , bulletPoints } = req.body;
+  const { serviceName , description , bulletPoints } = req.body;
     
   try {
     const servicesData = await serviceModel.findById(id);
@@ -82,16 +82,16 @@ export const editServices = async (req, res) => {
 
     // Update the fields
     servicesData.serviceName = serviceName || servicesData.serviceName;
-    servicesData.serviceDescription = serviceDescription || servicesData.serviceDescription;
+    servicesData.serviceDescription = description || servicesData.description;
     servicesData.bulletPoints = bulletPoints || servicesData.bulletPoints;
-    servicesData.serviceImageFileName = servicesData.serviceImageFileName || servicesData.serviceImageFileName;
+    servicesData.serviceImageFileName = servicesData.imageFileName || servicesData.imageFileName;
 
     // If a new file is uploaded, delete the old one and save the new one
     if (req.file) {
-      if (servicesData.serviceImageFileName) {
-        deleteUploadedFile(servicesData.serviceImageFileName);
+      if (servicesData.imageFileName) {
+        deleteUploadedFile(servicesData.imageFileName);
       }
-      servicesData.serviceImageFileName = req.file.filename;
+      servicesData.imageFileName = req.file.filename;
     }
 
     await servicesData.save();
