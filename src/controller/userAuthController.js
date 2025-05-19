@@ -65,7 +65,7 @@ export const login = async (req , res)=>{
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
         // proceed with token generation or session
-        res.status(200).json({ message: "Login successful" });
+        res.status(200).json({ message: "Login successful" , token});
 
     } catch (error) {
         console.log(error.message)
