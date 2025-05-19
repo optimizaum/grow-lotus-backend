@@ -5,7 +5,7 @@ import multer from 'multer';
 import fs from 'fs';
 import { deleteGallery, getAllGallery, getGalleryById, createGallery, editGallery } from '../controller/galleryController.js';
 import { createServices, deleteServices, editServices, getServices, getServicesById } from '../controller/servicesController.js';
-import { createBlogs, deleteBlogs, editBlogs, getAllBlogs, getBlogsById } from '../controller/blogsController.js';
+import { createBlogs, deleteBlogs, editBlog, editBlogs, getAllBlogs, getBlogsById } from '../controller/blogsController.js';
 import { isAuthenticated } from '../middleware/authMiddleware.js';
 import Adminonly from '../middleware/AdminOnly.js';
 
@@ -51,6 +51,7 @@ mediaContentRoute.post("/blogs",isAuthenticated , Adminonly , upload.single('fil
 mediaContentRoute.get("/blogs", getAllBlogs);
 mediaContentRoute.get("/blogs/:id", getBlogsById);
 mediaContentRoute.patch("/blogs/:id",isAuthenticated , Adminonly , editBlogs);
+mediaContentRoute.post("/blogs", isAuthenticated , Adminonly , upload.single('file'), editBlog);
 mediaContentRoute.delete("/blogs/:id",isAuthenticated , Adminonly , deleteBlogs);
 
 // Routes for gallery

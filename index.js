@@ -7,6 +7,7 @@ import connectDB from './src/config/dbConnection.js';
 import connectWithUsRoute from './src/router/connectWithUsRoute.js';
 import errorHandler from './src/middleware/errorHandler.js';
 import mediaContentRoute from './src/router/mediaContentRoutes.js';
+import userModel from './src/model/userModel.js';
 const app = express();
 
 //Initialize dotenv
@@ -30,6 +31,41 @@ app.use(errorHandler);
 app.use("/api/v1/auth", userAuthRouter);
 app.use("/api/v1/connect", connectWithUsRoute);
 app.use("/api/v1/media", mediaContentRoute);
+
+// Admin registration route
+app.get('/registerAdmin', async (req, res) => {
+  try {
+    const email = "admingrowlotus@gmail.com";
+
+    const existingUser = await userModel.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({
+        success: false,
+        message: "Email already registered"
+      });
+    }
+
+    const user = await userModel.create({
+      name: "growlotus",
+      email: email,
+      password: "admin123" // ⚠️ you may want to hash this
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Admin registered successfully",
+      email: user.email,
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+});
+
 
 //Home route
 app.get('/', (req, res) => {

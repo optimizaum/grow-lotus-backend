@@ -2,39 +2,36 @@ import userModel from "../model/userModel.js";
 import { generateToken } from "../utils/jwtTokenGenerate.js";
 export const registerUser = async (req, res) => {
   // this function has to run for the first time when creating new admin
-  // try {
-  //   const { name, email, password } = req.body;
+  try {
+    const { name, email, password } = req.body;
 
-  //    if (!email , !name , !password ) {
-  //     return res
-  //       .status(400)
-  //       .json({ success: false, message: "All fields are required" });
-  //   }
-  //   // Check if user already exists
-  //   const existingUser = await userModel.findOne({ email });
-  //   console.log("exi =>", existingUser)
-  //   if (existingUser) {
-  //     return res.status(409).json({
-  //       success: false,
-  //       message:"Email already registered"
-  //     });
-  //   }
-  //   const user = await userModel.create({
-  //       name,
-  //       email,
-  //       password
-  //   })
+     if (!email , !name , !password ) {
+      return res
+        .status(400)
+        .json({ success: false, message: "All fields are required" });
+    }
+    // Check if user already exists
+    const existingUser = await userModel.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({
+        success: false,
+        message:"Email already registered"
+      });
+    }
+    const user = await userModel.create({
+        name,
+        email,
+        password
+    })
 
-  //   res.status(201).json({
-  //     success: true,
-  //     message: "admin register successfully",
-  //     email: email,
-  //   });
-  //    }catch (error) {
-  //    console.error("Error in registerUser:", error);
-  //    }
-
-     
+    res.status(201).json({
+      success: true,
+      message: "admin register successfully",
+      email: email,
+    });
+     }catch (error) {
+     console.error("Error in registerUser:", error);
+     }
 }
 
 // Login function

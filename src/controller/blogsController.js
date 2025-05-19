@@ -4,6 +4,11 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 import fs from 'fs';
 import deleteUploadedFile from "../utils/deleteUploadedFileUtils.js";
+
+
+
+
+// Function to create a new blog
 export const createBlogs = (req, res) => {
   const { title , description } = req.body;
 
@@ -18,7 +23,8 @@ export const createBlogs = (req, res) => {
   // Save the file path and other details to the database
   const newBlog =  blogModel.create({
     imageFileName: filename,
-    eventType
+    title,
+    description
   });
 
   res.status(200).json({
@@ -43,9 +49,9 @@ export const getAllBlogs = async (req, res) => {
 }
 // Function to get Gallery file by id
 export const getBlogsById = async (req, res) => {
-  const { id } = req.params;
   try {
-    const blogs = await galleryModel.findById(id);
+    const { id } = req.params;
+    const blogs = await blogModel.findById(id);
     if (!blogs) {
       return res.status(404).json({ message: "blog not found" });
     }
@@ -61,31 +67,28 @@ export const getBlogsById = async (req, res) => {
 export const editBlogs = async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, description } = req.body;
+        const { title , description } = req.body;
 
         // Check if the blog exists
-        const blog = await blogModel.findById(id);
+        const blogData = await blogModel.findById(id);
         if (!blog) {
             return res.status(404).json({ message: "Blog not found" });
         }
 
         // Update the blog details
-        if (title) {
-            blog.title = title;
-        }
-        if (description) {
-            blog.description = description;
-        }
+         blogData.title = title || blogData.title;
+         blogData.description = description || blogData.description;
+         blogData.imageFileName = galleryData.imageFileName || blogData.imageFileName;
         
         // If a new file is uploaded, delete the old one and save the new one
         if (req.file) {
-            deleteUploadedFile(blog.imageFileName);
-            blog.imageFileName = req.file.filename;
+            deleteUploadedFile(blogData.imageFileName);
+            blogData.imageFileName = req.file.filename;
         }
 
-        await blog.save();
+        await blogData.save();
 
-        res.status(200).json({ message: "Blog updated successfully", data: blog });
+        res.status(200).json({ message: "Blog updated successfully", data: blogData });
         
     } catch (error) {
         console.error("Error in editBlogs:", error);
@@ -93,12 +96,43 @@ export const editBlogs = async (req, res) => {
     }
 }
 
+
+// Function to edit Edit Blog file by id
+export const editBlog = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { description , title} = req.body;
+    const blogData = await blogModel.findById(id);
+
+    // Update the fields
+    blogData.title = title || blogData.title;
+    blogData.description = description || blogData.description;
+    blogData.imageFileName = blogData.imageFileName || blogData.imageFileName;
+
+    // If a new file is uploaded, delete the old one and save the new one
+    if (req.file) {
+      if (blogData.imageFileName) {
+        deleteUploadedFile(blogData.imageFileName);
+      }
+      blogData.imageFileName = req.file.filename;
+    }
+
+    await blogData.save();
+
+    return res.status(200).json({ message: "blog updated successfully", blogData });
+  } catch (error) {
+    console.error("Error updating service:", error.message);
+    return res.status(500).json({ message: "Error updating service", error: error.message });
+  }
+};
+
+
 // DELETE controller
 export const deleteBlogs = async (req, res) => {
   try {
     const { id } = req.params;
     
-    const blog = await galleryModel.findById(id);
+    const blog = await blogModel.findById(id);
     if (!blog) {
       return res.status(404).json({ message: "blog not found" });
     }
@@ -117,16 +151,3 @@ export const deleteBlogs = async (req, res) => {
     return res.status(500).json({ message: "Error deleting blog", error: error.message });
   }
 };
-
-// // Utility function
-// const deleteUploadedFile = (filename) => {
-//   const filePath = join(process.cwd(), 'src/upload', filename);
-
-//   fs.unlink(filePath, (err) => {
-//     if (err) {
-//       console.error(`Failed to delete file '${filename}':`, err.message);
-//     } else {
-//       console.log(`File '${filename}' deleted from upload folder.`);
-//     }
-//   });
-// };
