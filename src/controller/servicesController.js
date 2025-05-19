@@ -23,7 +23,7 @@ export const createServices = (req, res) => {
   const filename = req.file.filename;
   // Save the file path and other details to the database
   const newServices =  serviceModel.create({
-    serviceImageFileName: filename,
+    imageFileName: filename,
     serviceName,
     serviceDescription,
     bulletPoints
@@ -113,9 +113,10 @@ export const deleteServices = async (req, res) => {
       return res.status(404).json({ message: "Services not found" });
     }
 
-    if (services.serviceImageFileName) {
-        console.log(`Deleting file: ${services.serviceImageFileName}`);
-        deleteUploadedFile(services.serviceImageFileName);
+    if (services.imageFileName) {
+      console.log()
+        console.log(`Deleting file =>>: ${services.imageFileName}`);
+        deleteUploadedFile(services.imageFileName);
     }
 
     // Delete the services record from DB

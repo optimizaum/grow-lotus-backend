@@ -6,6 +6,8 @@ import fs from 'fs';
 import { deleteGallery, getAllGallery, getGalleryById, createGallery } from '../controller/galleryController.js';
 import { createServices, deleteServices, editServices, getServices, getServicesById } from '../controller/servicesController.js';
 import { createBlogs, deleteBlogs, editBlogs, getAllBlogs, getBlogsById } from '../controller/blogsController.js';
+import { isAuthenticated } from '../middleware/authMiddleware.js';
+import Adminonly from '../middleware/AdminOnly.js';
 
 const mediaContentRoute = express.Router();
 
@@ -38,24 +40,24 @@ mediaContentRoute.get('/preview/:filename', (req , res) => {
 });
 
 // Route for Services
-mediaContentRoute.post("/services", upload.single('file'), createServices);
+mediaContentRoute.post("/services",isAuthenticated , Adminonly , upload.single('file'), createServices);
 mediaContentRoute.get("/services", getServices);
 mediaContentRoute.get("/services/:id", getServicesById);
-mediaContentRoute.patch("/services/:id", editServices);
-mediaContentRoute.delete("/services/:id", deleteServices);
+mediaContentRoute.patch("/services/:id",isAuthenticated , Adminonly , editServices);
+mediaContentRoute.delete("/services/:id",isAuthenticated , Adminonly , deleteServices);
 
 // Route for Blogs
-mediaContentRoute.post("/blogs", upload.single('file'), createBlogs);
+mediaContentRoute.post("/blogs",isAuthenticated , Adminonly , upload.single('file'), createBlogs);
 mediaContentRoute.get("/blogs", getAllBlogs);
 mediaContentRoute.get("/blogs/:id", getBlogsById);
-mediaContentRoute.patch("/blogs/:id", editBlogs);
-mediaContentRoute.delete("/blogs/:id", deleteBlogs);
+mediaContentRoute.patch("/blogs/:id",isAuthenticated , Adminonly , editBlogs);
+mediaContentRoute.delete("/blogs/:id",isAuthenticated , Adminonly , deleteBlogs);
 
 // Routes for gallery
-mediaContentRoute.post("/gallery", upload.single('file'), createGallery);
+mediaContentRoute.post("/gallery",isAuthenticated , Adminonly , upload.single('file'), createGallery);
 mediaContentRoute.get("/gallery", getAllGallery);
 mediaContentRoute.get("/gallery/:id", getGalleryById);
-mediaContentRoute.delete("/gallery/:id", deleteGallery);
+mediaContentRoute.delete("/gallery/:id",isAuthenticated , Adminonly , deleteGallery);
 
 // mediaContentRoute.use("/preview", express.static(join(__dirname, 'upload')));
 // Routes for Blog
