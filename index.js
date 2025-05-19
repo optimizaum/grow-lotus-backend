@@ -35,7 +35,7 @@ app.use("/api/v1/media", mediaContentRoute);
 // Admin registration route
 app.get('/registerAdmin', async (req, res) => {
   try {
-    const email = "admingrowlotus@gmail.com";
+    const email = "admin@growlotusfintech.com";
 
     const existingUser = await userModel.findOne({ email });
     if (existingUser) {
@@ -48,7 +48,7 @@ app.get('/registerAdmin', async (req, res) => {
     const user = await userModel.create({
       name: "growlotus",
       email: email,
-      password: "admin123" // ⚠️ you may want to hash this
+      password: "GrowLotus#567" 
     });
 
     res.status(201).json({
