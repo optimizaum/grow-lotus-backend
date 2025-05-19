@@ -70,10 +70,9 @@ export const getServicesById = async (req, res) => {
 
 // Function to edit file by ID
 export const editServices = async (req, res) => {
-  const { id } = req.params;
-  const { serviceName , description , bulletPoints } = req.body;
-    
   try {
+    const { id } = req.params;
+    const { serviceName , description , bulletPoints } = req.body;
     const servicesData = await serviceModel.findById(id);
     console.log("servicesData", servicesData);
     if (!servicesData) {
@@ -82,9 +81,9 @@ export const editServices = async (req, res) => {
 
     // Update the fields
     servicesData.serviceName = serviceName || servicesData.serviceName;
-    servicesData.serviceDescription = description || servicesData.description;
+    servicesData.description = description || servicesData.description;
     servicesData.bulletPoints = bulletPoints || servicesData.bulletPoints;
-    servicesData.serviceImageFileName = servicesData.imageFileName || servicesData.imageFileName;
+    servicesData.imageFileName = servicesData.imageFileName || servicesData.imageFileName;
 
     // If a new file is uploaded, delete the old one and save the new one
     if (req.file) {

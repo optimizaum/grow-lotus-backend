@@ -49,6 +49,35 @@ export const getGalleryById = async (req, res) => {
   }
 }
 
+// Function to edit Gallery file by id
+export const editGallery = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { eventType } = req.body;
+    const galleryData = await galleryModel.findById(id);
+
+    // Update the fields
+    galleryData.eventType = eventType || galleryData.eventType;
+    galleryData.imageFileName = galleryData.imageFileName || galleryData.imageFileName;
+
+    // If a new file is uploaded, delete the old one and save the new one
+    if (req.file) {
+      if (galleryData.imageFileName) {
+        deleteUploadedFile(galleryData.imageFileName);
+      }
+      galleryData.imageFileName = req.file.filename;
+    }
+
+    await galleryData.save();
+
+    return res.status(200).json({ message: "Service updated successfully", galleryData });
+  } catch (error) {
+    console.error("Error updating service:", error.message);
+    return res.status(500).json({ message: "Error updating service", error: error.message });
+  }
+};
+
+
 // DELETE controller
 export const deleteGallery = async (req, res) => {
   try {
@@ -73,16 +102,3 @@ export const deleteGallery = async (req, res) => {
     return res.status(500).json({ message: "Error deleting gallery", error: error.message });
   }
 };
-
-// // Utility function
-// const deleteUploadedFile = (filename) => {
-//   const filePath = join(process.cwd(), 'src/upload', filename);
-
-//   fs.unlink(filePath, (err) => {
-//     if (err) {
-//       console.error(`Failed to delete file '${filename}':`, err.message);
-//     } else {
-//       console.log(`File '${filename}' deleted from upload folder.`);
-//     }
-//   });
-// };

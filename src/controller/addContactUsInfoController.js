@@ -12,11 +12,11 @@ export const addContactUsInfo = async (req, res, next) => {
             .json({ success: false, message: "All fields are required" });
         }
         // Check if the email is already registered
-        const existingContact = await contactUsModel.findOne({ email });
+        const existingContact = await contactUsModel.find();
 
         if (existingContact) {
         // delete existing contact
-        await contactUsModel.findOneAndDelete({ email }); 
+        await contactUsModel.deleteMany({}); 
         }
         
         const newContactUsInfo = await contactUsModel.create({

@@ -3,7 +3,7 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
 import fs from 'fs';
-import { deleteGallery, getAllGallery, getGalleryById, createGallery } from '../controller/galleryController.js';
+import { deleteGallery, getAllGallery, getGalleryById, createGallery, editGallery } from '../controller/galleryController.js';
 import { createServices, deleteServices, editServices, getServices, getServicesById } from '../controller/servicesController.js';
 import { createBlogs, deleteBlogs, editBlogs, getAllBlogs, getBlogsById } from '../controller/blogsController.js';
 import { isAuthenticated } from '../middleware/authMiddleware.js';
@@ -43,7 +43,7 @@ mediaContentRoute.get('/preview/:filename', (req , res) => {
 mediaContentRoute.post("/services",isAuthenticated , Adminonly , upload.single('file'), createServices);
 mediaContentRoute.get("/services", getServices);
 mediaContentRoute.get("/services/:id", getServicesById);
-mediaContentRoute.patch("/services/:id",isAuthenticated , Adminonly , editServices);
+mediaContentRoute.patch("/services/:id",isAuthenticated , Adminonly , upload.single('file') , editServices);
 mediaContentRoute.delete("/services/:id",isAuthenticated , Adminonly , deleteServices);
 
 // Route for Blogs
@@ -57,6 +57,7 @@ mediaContentRoute.delete("/blogs/:id",isAuthenticated , Adminonly , deleteBlogs)
 mediaContentRoute.post("/gallery",isAuthenticated , Adminonly , upload.single('file'), createGallery);
 mediaContentRoute.get("/gallery", getAllGallery);
 mediaContentRoute.get("/gallery/:id", getGalleryById);
+mediaContentRoute.patch("/gallery/:id",isAuthenticated , Adminonly , upload.single('file') , editGallery);
 mediaContentRoute.delete("/gallery/:id",isAuthenticated , Adminonly , deleteGallery);
 
 // mediaContentRoute.use("/preview", express.static(join(__dirname, 'upload')));
