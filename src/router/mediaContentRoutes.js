@@ -1,38 +1,13 @@
 import express from 'express';
-import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
-import multer from 'multer';
-import fs from 'fs';
 import { deleteGallery, getAllGallery, getGalleryById, createGallery, editGallery } from '../controller/galleryController.js';
 import { createServices, deleteServices, editServices, getServices, getServicesById } from '../controller/servicesController.js';
 import { createBlogs, deleteBlogs, editBlog, editBlogs, getAllBlogs, getBlogsById } from '../controller/blogsController.js';
 import { isAuthenticated } from '../middleware/authMiddleware.js';
 import Adminonly from '../middleware/AdminOnly.js';
+import { upload } from '../utils/setupMulter.js';
 
 const mediaContentRoute = express.Router();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// Create upload folder if it doesn't exist
-const uploadFolder = join(__dirname, '../upload');
-if (!fs.existsSync(uploadFolder)) {
-  fs.mkdirSync(uploadFolder);
-}
-
-// Setup multer for disk storage
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadFolder); // store in /upload folder
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const extension = file.originalname.split('.').pop();
-    cb(null, `${file.fieldname}-${uniqueSuffix}.${extension}`);
-  }
-});
-
-const upload = multer({ storage });
 
 // Image file preview Route
 mediaContentRoute.get('/preview/:filename', (req , res) => {
@@ -61,7 +36,5 @@ mediaContentRoute.get("/gallery/:id", getGalleryById);
 mediaContentRoute.patch("/gallery/:id",isAuthenticated , Adminonly , upload.single('file') , editGallery);
 mediaContentRoute.delete("/gallery/:id",isAuthenticated , Adminonly , deleteGallery);
 
-// mediaContentRoute.use("/preview", express.static(join(__dirname, 'upload')));
-// Routes for Blog
 
 export default mediaContentRoute;

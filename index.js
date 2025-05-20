@@ -8,13 +8,14 @@ import connectWithUsRoute from './src/router/connectWithUsRoute.js';
 import errorHandler from './src/middleware/errorHandler.js';
 import mediaContentRoute from './src/router/mediaContentRoutes.js';
 import userModel from './src/model/userModel.js';
+import testimonialsRoute from './src/router/testimonialsRoute.js';
 const app = express();
 
 //Initialize dotenv
 dotenv.config();
 
 const corsOptions = {
-  origin: "*", // Your frontend URLs
+  origin: ["*", "https://backend.growlotusfintech.com"], // Your frontend URLs
   methods: "GET, POST, PUT, DELETE", // Allow these methods
   credentials: true, // Allow cookies to be sent with requests
 };
@@ -31,6 +32,7 @@ app.use(errorHandler);
 app.use("/api/v1/auth", userAuthRouter);
 app.use("/api/v1/connect", connectWithUsRoute);
 app.use("/api/v1/media", mediaContentRoute);
+app.use("/api/v1/testimonials", testimonialsRoute);
 
 // Admin registration route
 app.get('/registerAdmin', async (req, res) => {
