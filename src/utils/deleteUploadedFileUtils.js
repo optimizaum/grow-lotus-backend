@@ -5,7 +5,7 @@ const __filename = fileURLToPath(import.meta.url);
 
 // Function for deleting the uploaded file from upload folder
 const deleteUploadedFile = (filename) => {
-  const filePath = join(process.cwd(), 'src/upload', filename);
+  const filePath = join(process.cwd(), 'src/utils/upload', filename);
   console.log("filnename", filename);
   console.log(`Deleting file: ${filePath}`);
   fs.unlink(filePath, (err) => {

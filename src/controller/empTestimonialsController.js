@@ -3,7 +3,7 @@ import deleteUploadedFile from "../utils/deleteUploadedFileUtils.js";
 
 // Function to create a new employee testimonial
 
-export const empTestimonials = async (req, res) => {
+export const createEmpTestimonials = async (req, res) => {
   try {
     const {description, designation } = req.body;
 
@@ -18,17 +18,14 @@ export const empTestimonials = async (req, res) => {
     const imageFileName = req.file.filename;
 
     // Create a new testimonial instance
-    const newTestimonial = await new empTestimonialsModel({
+    const newTestimonial = await empTestimonialsModel.create({
       imageFileName,
       description,
       designation,
     });
 
-    // Save the testimonial to the database
-    await newTestimonial.save();
-
     // Send a success response
-    res.status(201).json({ message: "Employee testimonial created successfully" });
+    res.status(201).json({ message: "Employee testimonial created successfully" , newTestimonial});
   } catch (error) {
     console.error("Error creating employee testimonial:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -53,6 +50,58 @@ export const getAllEmpTestimonials = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// Function to get Employee testimonial by ID
+export const getEmpTestimonialsById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const testimonial = await empTestimonialsModel.findById(id);
+
+    if (!testimonial) {
+      return res.status(404).json({ message: "Testimonial not found" });
+    }
+
+    res.status(200).json({
+      message: "Employee testimonial fetched successfully",
+      testimonial,
+    });
+  } catch (error) {
+    console.error("Error fetching employee testimonial:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Function to edit Employee testimonial by ID
+export const editEmpTestimonials = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { description, designation } = req.body;
+
+    const testimonialData = await empTestimonialsModel.findById(id);
+    if (!testimonialData) {
+      return res.status(404).json({ message: "Testimonial not found" });
+    }
+
+    // Update the fields
+    testimonialData.description = description || testimonialData.description;
+    testimonialData.designation = designation || testimonialData.designation;
+    
+    // If a new file is uploaded, delete the old one and save the new one
+    if (req.file) {
+      if (testimonialData.imageFileName) {
+        deleteUploadedFile(testimonialData.imageFileName);
+      }
+      testimonialData.imageFileName = req.file.filename;
+    }
+    await testimonialData.save();
+    return res.status(200).json({ message: "Employee testimonial updated successfully", testimonialData });
+    }catch (error) {
+    console.error("Error editing employee testimonial:", error);
+    return res.status(500).json({ message: "Internal server error" });
+    }
+
+}
+
 
 // Function to delete an employee testimonial
 export const deleteEmpTestimonials = async (req, res) => {

@@ -62,6 +62,7 @@ export const editClientTestimonials = async (req, res) => {
 
     // Check if the testimonial exists
     const clientTestimonials = await clientTestimonialsModel.findById(id);
+    
     if (!clientTestimonials) {
       return res.status(404).json({ message: "Client Testimonials not found" });
     }
