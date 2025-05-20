@@ -6,7 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Create upload folder if it doesn't exist
-const uploadFolder = join(__dirname, '../upload');
+const uploadFolder = join(__dirname, 'upload');
 if (!fs.existsSync(uploadFolder)) {
   fs.mkdirSync(uploadFolder);
 }

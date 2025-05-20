@@ -20,13 +20,33 @@ export const createServices = (req, res) => {
     return res.status(400).json({ message: "No file uploaded" });
   }
 
+  //  // Parse bulletPoints if it’s sent as a string (from form-data)
+  //   let bulletPointsArray = bulletPoints;
+  //   if (typeof bulletPoints === 'string') {
+  //     // If comma-separated
+  //     bulletPointsArray = bulletPoints.split(',').map(item => item.trim());
+  //   }
+
+     // Handle bulletPoints
+    let bulletPointArray = [];
+    if (typeof bulletPoints === "string") {
+      // Remove square brackets and split by comma
+      bulletPointArray = bulletPoints
+        .replace(/[\[\]]/g, "") // removes [ and ]
+        .split(",")
+        .map(point => point.trim());
+    } else if (Array.isArray(bulletPoints)) {
+      bulletPointArray = bulletPoints;
+    }
+
+
   const filename = req.file.filename;
   // Save the file path and other details to the database
   const newServices =  serviceModel.create({
     imageFileName: filename,
     serviceName,
     description,
-    bulletPoints
+    bulletPoints:bulletPointArray
   });
 
   res.status(200).json({
@@ -41,6 +61,8 @@ export const getServices = async (req, res) => {
     if (!services || services.length === 0) {
       return res.status(404).json({ message: "No services found" });
     }
+
+
 
     res.status(200).json({
         message: "Services fetched successfully",

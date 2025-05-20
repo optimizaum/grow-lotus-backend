@@ -1,4 +1,6 @@
 import express from 'express';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
 import { deleteGallery, getAllGallery, getGalleryById, createGallery, editGallery } from '../controller/galleryController.js';
 import { createServices, deleteServices, editServices, getServices, getServicesById } from '../controller/servicesController.js';
 import { createBlogs, deleteBlogs, editBlog, editBlogs, getAllBlogs, getBlogsById } from '../controller/blogsController.js';
@@ -8,10 +10,12 @@ import { upload } from '../utils/setupMulter.js';
 
 const mediaContentRoute = express.Router();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Image file preview Route
 mediaContentRoute.get('/preview/:filename', (req , res) => {
-  res.sendFile(join(__dirname, '../upload', req.params.filename));
+  res.sendFile(join(__dirname, '../utils/upload', req.params.filename));
 });
 
 // Route for Services
@@ -36,5 +40,7 @@ mediaContentRoute.get("/gallery/:id", getGalleryById);
 mediaContentRoute.patch("/gallery/:id",isAuthenticated , Adminonly , upload.single('file') , editGallery);
 mediaContentRoute.delete("/gallery/:id",isAuthenticated , Adminonly , deleteGallery);
 
+// mediaContentRoute.use("/preview", express.static(join(__dirname, 'upload')));
+// Routes for Blog
 
 export default mediaContentRoute;
