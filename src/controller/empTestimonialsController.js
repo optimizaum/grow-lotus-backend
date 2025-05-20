@@ -18,7 +18,7 @@ export const empTestimonials = async (req, res) => {
     const imageFileName = req.file.filename;
 
     // Create a new testimonial instance
-    const newTestimonial = new empTestimonialsModel({
+    const newTestimonial = await new empTestimonialsModel({
       imageFileName,
       description,
       designation,

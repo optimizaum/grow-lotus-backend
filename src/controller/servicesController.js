@@ -6,7 +6,7 @@ import deleteUploadedFile from "../utils/deleteUploadedFileUtils.js";
 const __filename = fileURLToPath(import.meta.url);
 
 // Function to create a new service
-export const createServices = (req, res) => {
+export const createServices = async (req, res) => {
   const { serviceName , description , bulletPoints } = req.body;
   // Check if serviceName || description and file are provided
   if(!serviceName){
@@ -20,14 +20,7 @@ export const createServices = (req, res) => {
     return res.status(400).json({ message: "No file uploaded" });
   }
 
-  //  // Parse bulletPoints if it’s sent as a string (from form-data)
-  //   let bulletPointsArray = bulletPoints;
-  //   if (typeof bulletPoints === 'string') {
-  //     // If comma-separated
-  //     bulletPointsArray = bulletPoints.split(',').map(item => item.trim());
-  //   }
-
-     // Handle bulletPoints
+    // Handle bulletPoints
     let bulletPointArray = [];
     if (typeof bulletPoints === "string") {
       // Remove square brackets and split by comma
@@ -42,7 +35,7 @@ export const createServices = (req, res) => {
 
   const filename = req.file.filename;
   // Save the file path and other details to the database
-  const newServices =  serviceModel.create({
+  const newServices = await serviceModel.create({
     imageFileName: filename,
     serviceName,
     description,
@@ -94,20 +87,32 @@ export const getServicesById = async (req, res) => {
 export const editServices = async (req, res) => {
   try {
     const { id } = req.params;
-    const { serviceName , description , bulletPoints } = req.body;
+    const { serviceName, description, bulletPoints } = req.body;
+
     const servicesData = await serviceModel.findById(id);
-    console.log("servicesData", servicesData);
     if (!servicesData) {
       return res.status(404).json({ message: "Service not found" });
+    }
+
+    // Handle bulletPoints formatting
+    let bulletPointArray = servicesData.bulletPoints; // default to existing
+    if (bulletPoints) {
+      if (typeof bulletPoints === "string") {
+        bulletPointArray = bulletPoints
+          .replace(/[\[\]]/g, "") // remove brackets
+          .split(",")
+          .map(point => point.trim());
+      } else if (Array.isArray(bulletPoints)) {
+        bulletPointArray = bulletPoints;
+      }
     }
 
     // Update the fields
     servicesData.serviceName = serviceName || servicesData.serviceName;
     servicesData.description = description || servicesData.description;
-    servicesData.bulletPoints = bulletPoints || servicesData.bulletPoints;
-    servicesData.imageFileName = servicesData.imageFileName || servicesData.imageFileName;
+    servicesData.bulletPoints = bulletPointArray;
 
-    // If a new file is uploaded, delete the old one and save the new one
+    // If a new file is uploaded, replace the old one
     if (req.file) {
       if (servicesData.imageFileName) {
         deleteUploadedFile(servicesData.imageFileName);
@@ -117,12 +122,20 @@ export const editServices = async (req, res) => {
 
     await servicesData.save();
 
-    return res.status(200).json({ message: "Service updated successfully", servicesData });
+    return res.status(200).json({
+      message: "Service updated successfully",
+      servicesData,
+    });
+
   } catch (error) {
     console.error("Error updating service:", error.message);
-    return res.status(500).json({ message: "Error updating service", error: error.message });
+    return res.status(500).json({
+      message: "Error updating service",
+      error: error.message,
+    });
   }
 };
+
 
 // Function to delete file by ID
 export const deleteServices = async (req, res) => {

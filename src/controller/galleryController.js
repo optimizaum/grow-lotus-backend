@@ -3,7 +3,7 @@ import deleteUploadedFile from "../utils/deleteUploadedFileUtils.js";
 
 
 // Function to create a new gallery
-export const createGallery = (req, res) => {
+export const createGallery = async (req, res) => {
   const { eventType } = req.body;
   // Check if eventType and actions are provided
   if(!eventType ){
@@ -15,7 +15,7 @@ export const createGallery = (req, res) => {
 
   const filename = req.file.filename;
   // Save the file path and other details to the database
-  const newGallery =  galleryModel.create({
+  const newGallery =  await galleryModel.create({
     imageFileName: filename,
     eventType
   });

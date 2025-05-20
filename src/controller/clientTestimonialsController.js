@@ -11,11 +11,10 @@ export const clientTestimonials = async (req , res)=>{
 
 
   // Save the file path and other details to the database
-  const newClientTestimonialsModel =  clientTestimonialsModel.create({
+  const newClientTestimonialsModel = await clientTestimonialsModel.create({
     title,
     description
   });
-
   res.status(200).json({
     message: "Client Testimonials created successfully",
     path: newClientTestimonialsModel,

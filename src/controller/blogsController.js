@@ -9,7 +9,7 @@ import deleteUploadedFile from "../utils/deleteUploadedFileUtils.js";
 
 
 // Function to create a new blog
-export const createBlogs = (req, res) => {
+export const createBlogs = async (req, res) => {
   const { title , description } = req.body;
 
   if (!title) {
@@ -21,7 +21,7 @@ export const createBlogs = (req, res) => {
 
   const filename = req.file.filename;
   // Save the file path and other details to the database
-  const newBlog =  blogModel.create({
+  const newBlog = await blogModel.create({
     imageFileName: filename,
     title,
     description
