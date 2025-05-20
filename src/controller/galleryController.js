@@ -1,9 +1,8 @@
 import galleryModel from "../model/galleryModel.js";
-import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
-const __filename = fileURLToPath(import.meta.url);
-import fs from 'fs';
 import deleteUploadedFile from "../utils/deleteUploadedFileUtils.js";
+
+
+// Function to create a new gallery
 export const createGallery = (req, res) => {
   const { eventType } = req.body;
   // Check if eventType and actions are provided

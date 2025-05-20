@@ -12,7 +12,7 @@ const serviceSchema = new mongoose.Schema({
         type: String,
     },
     bulletPoints:{
-        type: String,
+        type: [String],
     },
     createdAt: {
         type: Date,
