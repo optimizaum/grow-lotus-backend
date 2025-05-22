@@ -9,6 +9,11 @@ import errorHandler from './src/middleware/errorHandler.js';
 import mediaContentRoute from './src/router/mediaContentRoutes.js';
 import userModel from './src/model/userModel.js';
 import testimonialsRoute from './src/router/testimonialsRoute.js';
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const app = express();
 
 //Initialize dotenv
@@ -24,7 +29,7 @@ dotenv.config();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/api/uploads", express.static("./src/upload"));
+app.use("/api/uploads", express.static(path.join(__dirname, "src", "upload")));
 app.use(cookieParser());
 // Error-handling middleware (should come last)
 app.use(errorHandler);
