@@ -29,7 +29,7 @@ dotenv.config();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/api/uploads", express.static("./src/upload"));
+app.use("/api/v1/uploads", express.static("./src/upload"));
 app.use(cookieParser());
 // Error-handling middleware (should come last)
 app.use(errorHandler);
