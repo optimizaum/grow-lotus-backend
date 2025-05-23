@@ -9,6 +9,7 @@ import errorHandler from './src/middleware/errorHandler.js';
 import mediaContentRoute from './src/router/mediaContentRoutes.js';
 import userModel from './src/model/userModel.js';
 import testimonialsRoute from './src/router/testimonialsRoute.js';
+import emailRoute from './src/router/emailRoute.js';
 const app = express();
 
 //Initialize dotenv
@@ -33,6 +34,7 @@ app.use("/api/v1/auth", userAuthRouter);
 app.use("/api/v1/connect", connectWithUsRoute);
 app.use("/api/v1/media", mediaContentRoute);
 app.use("/api/v1/testimonials", testimonialsRoute);
+app.use("/api/v1/email", emailRoute);
 
 // Admin registration route
 app.get('/registerAdmin', async (req, res) => {

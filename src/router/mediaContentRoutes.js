@@ -19,7 +19,8 @@ mediaContentRoute.get('/preview/:filename', (req , res) => {
 });
 
 // Route for Services
-mediaContentRoute.post("/services",isAuthenticated , Adminonly , upload.single('file'), createServices);
+// mediaContentRoute.post("/services",isAuthenticated , Adminonly , upload.single('file'), createServices);
+mediaContentRoute.post("/services", upload.single('file'), createServices);
 mediaContentRoute.get("/services", getServices);
 mediaContentRoute.get("/services/:id", getServicesById);
 mediaContentRoute.patch("/services/:id",isAuthenticated , Adminonly , upload.single('file') , editServices);
