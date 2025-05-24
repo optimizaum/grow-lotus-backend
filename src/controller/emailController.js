@@ -21,8 +21,11 @@ export const applyFrenchiseController = async (req, res) => {
     </div>
   `;
 
-  const result = await sendEmail({ subject, html });
-  return res.status(result.success ? 200 : 500).json(result);
+  // const result = await sendEmail({ subject, html });
+  // return res.status(result.success ? 200 : 500).json(result);
+
+   sendEmail({ subject, html }).catch(console.error);
+   return res.status(200).json({ success: true, message: "Application received. We'll contact you soon." });
 };
 
 // Private Funding Controller
@@ -44,8 +47,10 @@ export const privateFundingController = async (req, res) => {
     </div>
   `;
 
-  const result = await sendEmail({ subject, html });
-  return res.status(result.success ? 200 : 500).json(result);
+  // const result = await sendEmail({ subject, html });
+  // return res.status(result.success ? 200 : 500).json(result);
+  sendEmail({ subject, html }).catch(console.error);
+   return res.status(200).json({ success: true, message: "Application received. We'll contact you soon." });
 };
 
 // Enquiry Controller
@@ -65,8 +70,10 @@ export const enquiryController = async (req, res) => {
     </div>
   `;
 
-  const result = await sendEmail({ subject, html });
-  return res.status(result.success ? 200 : 500).json(result);
+  // const result = await sendEmail({ subject, html });
+  // return res.status(result.success ? 200 : 500).json(result);
+  sendEmail({ subject, html }).catch(console.error);
+   return res.status(200).json({ success: true, message: "Application received. We'll contact you soon." });
 };
 
 // Finance Advice Controller
@@ -86,8 +93,10 @@ export const financeAdviceController = async (req, res) => {
     </div>
   `;
 
-  const result = await sendEmail({ subject, html });
-  return res.status(result.success ? 200 : 500).json(result);
+  // const result = await sendEmail({ subject, html });
+  // return res.status(result.success ? 200 : 500).json(result);
+  sendEmail({ subject, html }).catch(console.error);
+   return res.status(200).json({ success: true, message: "Application received. We'll contact you soon." });
 };
 
 // Contact Us Controller
@@ -108,6 +117,34 @@ export const contactUsController = async (req, res) => {
     </div>
   `;
 
-  const result = await sendEmail({ subject, html });
-  return res.status(result.success ? 200 : 500).json(result);
+  // const result = await sendEmail({ subject, html });
+  // return res.status(result.success ? 200 : 500).json(result);
+  sendEmail({ subject, html }).catch(console.error);
+   return res.status(200).json({ success: true, message: "Application received. We'll contact you soon." });
+};
+
+
+// Book a meeting Controller
+export const BookAMeeting = async (req, res) => {
+  const { name, email, mobile, message } = req.body;
+  if (!name || !email || !mobile) {
+    return res.status(400).json({ success: false, message: "Missing required fields." });
+  }
+
+  const subject = "📅 Book a Meeting Request - Grow Lotus";
+  const html = `
+    <div style="font-family: Arial, sans-serif; padding: 20px;">
+      <h2 style="color: #4CAF50;">New Meeting Request</h2>
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Mobile:</strong> ${mobile}</p>
+      <p><strong>Message:</strong> ${message || "No message provided"}</p>
+      <hr style="margin-top: 20px;">
+      <p style="font-size: 0.9rem; color: #555;">This request was submitted via the Book a Meeting form on Grow Lotus.</p>
+    </div>
+  `;
+  // const result = await sendEmail({ subject, html });
+  // return res.status(result.success ? 200 : 500).json(result);
+  sendEmail({ subject, html }).catch(console.error);
+   return res.status(200).json({ success: true, message: "Application received. We'll contact you soon." });
 };
