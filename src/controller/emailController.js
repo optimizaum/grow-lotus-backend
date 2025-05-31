@@ -55,6 +55,9 @@ export const privateFundingController = async (req, res) => {
 
 // Enquiry Controller
 export const enquiryController = async (req, res) => {
+
+  // console.log("mail request ....");
+  
   const { name, phone, serviceType } = req.body;
   if (!name || !phone || !serviceType) {
     return res.status(400).json({ success: false, message: "name, phone, serviceType all are required fields." });

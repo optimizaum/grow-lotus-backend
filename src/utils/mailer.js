@@ -17,7 +17,7 @@ export const sendEmail = async ({ subject, html }) => {
 
   try {
     // const recipient = to || DEFAULT_EMAIL;
-    const recipient = "prashantchauhanj@gmail.com";
+    const recipient = "sanyogita@growlotusfintech.com";
 
     const info = await transporter.sendMail({
       from: `"My App" <${process.env.EMAIL_USER}>`,
