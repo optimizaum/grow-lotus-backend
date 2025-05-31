@@ -59,7 +59,7 @@ export const getClientTestimonialsById = async (req, res) => {
 export const editClientTestimonials = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description } = req.body;
+    const {clientName, title, description } = req.body;
 
     // Check if the testimonial exists
     const clientTestimonials = await clientTestimonialsModel.findById(id);
@@ -69,6 +69,7 @@ export const editClientTestimonials = async (req, res) => {
     }
 
     // Update the testimonial
+    clientTestimonials.clientName = title || clientTestimonials.clientName;
     clientTestimonials.title = title || clientTestimonials.title;
     clientTestimonials.description = description || clientTestimonials.description;
 
