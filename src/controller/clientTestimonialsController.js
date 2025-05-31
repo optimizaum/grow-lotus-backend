@@ -3,15 +3,16 @@ import clientTestimonialsModel from '../model/clientTestimonialsModel.js';
 // Function to create a new client testimonial
 
 export const clientTestimonials = async (req , res)=>{
-    const { title , description } = req.body;
+    const {clientName, title , description } = req.body;
     
-    if(!title || !description){
+    if(!clientName || !title || !description){
         return res.status(400).json({ message: "Title and description are required" });
     }
 
 
   // Save the file path and other details to the database
   const newClientTestimonialsModel = await clientTestimonialsModel.create({
+    clientName,
     title,
     description
   });

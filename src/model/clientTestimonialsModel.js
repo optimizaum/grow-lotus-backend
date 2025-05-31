@@ -5,6 +5,9 @@ const clientTestimonialsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+   clientName:{
+    type: String,
+  },
   description:{
     type: String,
   },
