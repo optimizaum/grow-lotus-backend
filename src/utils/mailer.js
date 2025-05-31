@@ -1,11 +1,8 @@
 // utils/mailer.js
 import nodemailer from 'nodemailer';
 
-// const DEFAULT_EMAIL = process.env.RECIEVER_MAIL;
-const DEFAULT_EMAIL = "connect@growlotusfintech.com";
-
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
+  host: "smtp.hostinger.com",
   port: 587,
   secure: false,
   requireTLS: true,
@@ -20,7 +17,7 @@ export const sendEmail = async ({ subject, html }) => {
 
   try {
     // const recipient = to || DEFAULT_EMAIL;
-    const recipient = DEFAULT_EMAIL;
+    const recipient = "prashantchauhanj@gmail.com";
 
     const info = await transporter.sendMail({
       from: `"My App" <${process.env.EMAIL_USER}>`,
