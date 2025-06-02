@@ -69,7 +69,7 @@ export const editClientTestimonials = async (req, res) => {
     }
 
     // Update the testimonial
-    clientTestimonials.clientName = title || clientTestimonials.clientName;
+    clientTestimonials.clientName = clientName || clientTestimonials.clientName;
     clientTestimonials.title = title || clientTestimonials.title;
     clientTestimonials.description = description || clientTestimonials.description;
 

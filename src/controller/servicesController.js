@@ -88,10 +88,10 @@ export const getServicesById = async (req, res) => {
 }
 
 // Function to edit file by ID
-export const editServices = async (req, res) => {
+export const editServices = async (req, res) => { 
   try {
     const { id } = req.params;
-    const { serviceName, description, bulletPoints } = req.body;
+    const { serviceName, subServiceName, description, bulletPoints } = req.body;
 
     const servicesData = await serviceModel.findById(id);
     if (!servicesData) {
@@ -113,6 +113,7 @@ export const editServices = async (req, res) => {
 
     // Update the fields
     servicesData.serviceName = serviceName || servicesData.serviceName;
+    servicesData.subServiceName = subServiceName || servicesData.subServiceName;
     servicesData.description = description || servicesData.description;
     servicesData.bulletPoints = bulletPointArray;
 

@@ -71,14 +71,16 @@ export const editBlogs = async (req, res) => {
 
         // Check if the blog exists
         const blogData = await blogModel.findById(id);
-        if (!blog) {
+        if (!blogData) {
             return res.status(404).json({ message: "Blog not found" });
         }
+        console.log("my blog================================> " , blogData);
+        
 
         // Update the blog details
          blogData.title = title || blogData.title;
          blogData.description = description || blogData.description;
-         blogData.imageFileName = galleryData.imageFileName || blogData.imageFileName;
+         blogData.imageFileName = blogData.imageFileName || blogData.imageFileName;
         
         // If a new file is uploaded, delete the old one and save the new one
         if (req.file) {
