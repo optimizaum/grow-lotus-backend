@@ -7,10 +7,13 @@ const __filename = fileURLToPath(import.meta.url);
 
 // Function to create a new service
 export const createServices = async (req, res) => {
-  const { serviceName , description , bulletPoints } = req.body;
+  const { serviceName , subServiceName, description , bulletPoints } = req.body;
   // Check if serviceName || description and file are provided
   if(!serviceName){
     return res.status(400).json({ message: "Service Name required" });
+  }
+   if(!subServiceName){
+    return res.status(400).json({ message: "subServiceName Name required" });
   }
   if(!description ){
     return res.status(400).json({ message: "Service Description required" });
@@ -38,6 +41,7 @@ export const createServices = async (req, res) => {
   const newServices = await serviceModel.create({
     imageFileName: filename,
     serviceName,
+    subServiceName,
     description,
     bulletPoints:bulletPointArray
   });

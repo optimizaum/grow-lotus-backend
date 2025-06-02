@@ -30,8 +30,8 @@ mediaContentRoute.delete("/services/:id",isAuthenticated , Adminonly , deleteSer
 mediaContentRoute.post("/blogs",isAuthenticated , Adminonly , upload.single('file'), createBlogs);
 mediaContentRoute.get("/blogs", getAllBlogs);
 mediaContentRoute.get("/blogs/:id", getBlogsById);
-mediaContentRoute.patch("/blogs/:id",isAuthenticated , Adminonly , editBlogs);
-mediaContentRoute.post("/blogs", isAuthenticated , Adminonly , upload.single('file'), editBlog);
+mediaContentRoute.patch("/blogs/:id",isAuthenticated , Adminonly , upload.single('file'), editBlogs);
+// mediaContentRoute.post("/blogs", isAuthenticated , Adminonly , upload.single('file'), editBlog);
 mediaContentRoute.delete("/blogs/:id",isAuthenticated , Adminonly , deleteBlogs);
 
 // Routes for gallery
