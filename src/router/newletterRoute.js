@@ -8,6 +8,6 @@ const newsletterRoute = express.Router();
 // POST /api/v1/newsletter/subscribe
 newsletterRoute.post("/subscribe", subscribe);
 newsletterRoute.get("/admin/subscribers",isAuthenticated , Adminonly , getAllSubscribers);
-newsletterRoute.post("/send-email" , sendNewsletterEmail);
+newsletterRoute.post("/send-email" ,isAuthenticated , Adminonly, sendNewsletterEmail);
 
 export default newsletterRoute;

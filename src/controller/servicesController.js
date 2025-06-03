@@ -27,7 +27,8 @@ export const createServices = async (req, res) => {
       bulletPointArray = bulletPoints
         .replace(/[\[\]]/g, "") // removes [ and ]
         .split(",")
-        .map(point => point.trim());
+        // .map(point => point.trim());
+        .map(point => point.trim().replace(/^"|"$/g, ""));
     } else if (Array.isArray(bulletPoints)) {
       bulletPointArray = bulletPoints;
     }
@@ -102,7 +103,8 @@ export const editServices = async (req, res) => {
         bulletPointArray = bulletPoints
           .replace(/[\[\]]/g, "") // remove brackets
           .split(",")
-          .map(point => point.trim());
+          // .map(point => point.trim());
+        .map(point => point.trim().replace(/^"|"$/g, ""));
       } else if (Array.isArray(bulletPoints)) {
         bulletPointArray = bulletPoints;
       }
