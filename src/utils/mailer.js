@@ -12,16 +12,21 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// export const sendEmail = async ({ to, subject, html }) => {
-export const sendEmail = async ({ subject, html }) => {
+export const sendEmail = async ({ to, subject, html }) => { 
 
   try {
-    // const recipient = "prashantchauhanj@gmail.com";
-    const recipient = "sanyogita@growlotusfintech.com";
+    // const defaultRecipient = "prashantchauhanj@gmail.com";
+    const defaultRecipient = "sanyogita@growlotusfintech.com";
+
+    const recipientList = !to
+      ? defaultRecipient
+      : Array.isArray(to)
+        ? to.join(",")
+        : to;
 
     const info = await transporter.sendMail({
       from: `"My App" <${process.env.EMAIL_USER}>`,
-      to: recipient,
+      to: recipientList,
       subject,
       html,
     });

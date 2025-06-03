@@ -15,9 +15,6 @@ export const createServices = async (req, res) => {
    if(!subServiceName){
     return res.status(400).json({ message: "subServiceName Name required" });
   }
-  if(!description ){
-    return res.status(400).json({ message: "Service Description required" });
-  }
 
   if (!req.file) {
     return res.status(400).json({ message: "No file uploaded" });
@@ -42,7 +39,7 @@ export const createServices = async (req, res) => {
     imageFileName: filename,
     serviceName,
     subServiceName,
-    description,
+    description: description || "",
     bulletPoints:bulletPointArray
   });
 
