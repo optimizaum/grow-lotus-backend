@@ -7,12 +7,12 @@ const __filename = fileURLToPath(import.meta.url);
 
 // Function to create a new service
 export const createServices = async (req, res) => {
-  const { serviceName , subServiceName, description , bulletPoints } = req.body;
+  const { serviceName, subServiceName, description, bulletPoints } = req.body;
   // Check if serviceName || description and file are provided
-  if(!serviceName){
+  if (!serviceName) {
     return res.status(400).json({ message: "Service Name required" });
   }
-   if(!subServiceName){
+  if (!subServiceName) {
     return res.status(400).json({ message: "subServiceName Name required" });
   }
 
@@ -20,18 +20,23 @@ export const createServices = async (req, res) => {
     return res.status(400).json({ message: "No file uploaded" });
   }
 
-    // Handle bulletPoints
-    let bulletPointArray = [];
-    if (typeof bulletPoints === "string") {
-      // Remove square brackets and split by comma
-      bulletPointArray = bulletPoints
-        .replace(/[\[\]]/g, "") // removes [ and ]
-        .split(",")
-        // .map(point => point.trim());
-        .map(point => point.trim().replace(/^"|"$/g, ""));
-    } else if (Array.isArray(bulletPoints)) {
-      bulletPointArray = bulletPoints;
+  // Handle bulletPoints
+  let bulletPointArray = []; 
+  if (typeof bulletPoints === "string") {
+  try {
+    bulletPointArray = JSON.parse(bulletPoints);
+    // Make sure it's an array of strings
+    if (!Array.isArray(bulletPointArray)) {
+      bulletPointArray = [String(bulletPointArray)];
     }
+  } catch (e) {
+    // If parsing fails, fallback to the original string as single bullet point
+    bulletPointArray = [bulletPoints];
+  }
+} else if (Array.isArray(bulletPoints)) {
+  bulletPointArray = bulletPoints;
+}
+
 
 
   const filename = req.file.filename;
@@ -41,7 +46,7 @@ export const createServices = async (req, res) => {
     serviceName,
     subServiceName,
     description: description || "",
-    bulletPoints:bulletPointArray
+    bulletPoints: bulletPointArray
   });
 
   res.status(200).json({
@@ -49,7 +54,7 @@ export const createServices = async (req, res) => {
     path: newServices,
   });
 };
- // Function to get file 
+// Function to get file 
 export const getServices = async (req, res) => {
   try {
     const services = await serviceModel.find();
@@ -60,8 +65,8 @@ export const getServices = async (req, res) => {
 
 
     res.status(200).json({
-        message: "Services fetched successfully",
-        services,
+      message: "Services fetched successfully",
+      services,
     });
   } catch (error) {
     res.status(500).json({ message: "Error fetching services", error });
@@ -77,8 +82,8 @@ export const getServicesById = async (req, res) => {
       return res.status(404).json({ message: "Service not found" });
     }
     res.status(200).json({
-        message: "Service fetched successfully",
-        services,
+      message: "Service fetched successfully",
+      services,
     });
   } catch (error) {
     res.status(500).json({ message: "Error fetching gallery", error });
@@ -86,7 +91,7 @@ export const getServicesById = async (req, res) => {
 }
 
 // Function to edit file by ID
-export const editServices = async (req, res) => { 
+export const editServices = async (req, res) => {
   try {
     const { id } = req.params;
     const { serviceName, subServiceName, description, bulletPoints } = req.body;
@@ -98,17 +103,33 @@ export const editServices = async (req, res) => {
 
     // Handle bulletPoints formatting
     let bulletPointArray = servicesData.bulletPoints; // default to existing
-    if (bulletPoints) {
-      if (typeof bulletPoints === "string") {
-        bulletPointArray = bulletPoints
-          .replace(/[\[\]]/g, "") // remove brackets
-          .split(",")
-          // .map(point => point.trim());
-        .map(point => point.trim().replace(/^"|"$/g, ""));
-      } else if (Array.isArray(bulletPoints)) {
-        bulletPointArray = bulletPoints;
+    // if (bulletPoints) {
+    //   if (typeof bulletPoints === "string") {
+    //     bulletPointArray = bulletPoints
+    //       .replace(/[\[\]]/g, "") // remove brackets
+    //       .split(",")
+    //       // .map(point => point.trim());
+    //     .map(point => point.trim().replace(/^"|"$/g, ""));
+    //   } else if (Array.isArray(bulletPoints)) {
+    //     bulletPointArray = bulletPoints;
+    //   }
+    // }
+
+    if (typeof bulletPoints === "string") {
+      try {
+        bulletPointArray = JSON.parse(bulletPoints);
+        // Make sure it's an array of strings
+        if (!Array.isArray(bulletPointArray)) {
+          bulletPointArray = [String(bulletPointArray)];
+        }
+      } catch (e) {
+        // If parsing fails, fallback to the original string as single bullet point
+        bulletPointArray = [bulletPoints];
       }
+    } else if (Array.isArray(bulletPoints)) {
+      bulletPointArray = bulletPoints;
     }
+
 
     // Update the fields
     servicesData.serviceName = serviceName || servicesData.serviceName;
@@ -153,8 +174,8 @@ export const deleteServices = async (req, res) => {
 
     if (services.imageFileName) {
       console.log()
-        console.log(`Deleting file =>>: ${services.imageFileName}`);
-        deleteUploadedFile(services.imageFileName);
+      console.log(`Deleting file =>>: ${services.imageFileName}`);
+      deleteUploadedFile(services.imageFileName);
     }
 
     // Delete the services record from DB
